@@ -1,56 +1,90 @@
 const MODEL_TYPE = {
-  'Pretrain-Model': ['TimesFM', 'Timer', 'UniTS', 'TTM', 'MOIRAI', 'ROSE', 'Moment'],
-  'LLM-Based-Model': ['GPT4TS', 'UniTime', 'S2IPLLM', 'TimeLLM'],
-  'Specific-Model': [
-    'PatchTST',
-    'Dlinear',
-    'FITS',
-    'iTransformer',
-    'FedFormer',
-    'TimesNet',
-    'TimeMixer',
+  'Non-Learning-Model': ['LOF', 'HBOS', 'ARIMA', 'SARIMA', 'StatThreshold', 'ZMS'],
+  'Machine-Learning-Model': [
+    'OCSVM',
+    'DeepPoint',
+    'KNN',
+    'Isolation Forest',
+    'Spectral Residual',
+    'LODA',
+    'PCA',
   ],
+  'Deep-Learning-Model': [
+    'DAGMM',
+    'iTransformer',
+    'NLinear',
+    'DLinear',
+    'AE',
+    'ModernTCN',
+    'PatchTST',
+    'TimesNet',
+    'Anomaly Transformer',
+    'VAE',
+    'TranAD',
+    'DualTF',
+    'LSTMED',
+    'DCdetector',
+  ],
+  'LLM-Based-Model': ['GPT4TS', 'UniTime'],
+  'Pre-trained-Model': ['Timer', 'UniTS', 'TinyTimeMixer', 'Moment'],
 }
 
-const all_data = {
+const allData = {
   zero: { method: {}, dataset: [], metric: [], result: {} },
   few: { method: {}, dataset: [], metric: [], result: {} },
   full: { method: {}, dataset: [], metric: [], result: {} },
 }
 
 // const settings = ['few', 'full']
-const settings = ['few']
+// const settings = ['full']
 
-settings.forEach(setting => {
-  fetch(`./${setting}.csv`)
-    .then(response => response.text())
-    .then(text =>
-      Papa.parse(text, {
-        header: true,
-        dynamicTyping: true,
-        complete: results => {
-          for (let i1 = 1; i1 < 4; i1++) {
-            const scoreBox = document.getElementById(`Score-${setting}/${i1}`)
-            if (scoreBox != null) {
-              scoreBox.checked = false
-            } else {
-              console.log(`no scoreBox of ${setting}/${i1}`)
+// loadDataAndInitializeSettings(settings)
+
+/**
+ * Loads CSV data for each setting and initializes UI elements accordingly.
+ *
+ * @param {string[]} settings -Literal['zero', 'few', 'full']
+ *
+ * For each setting, this function:
+ * - Fetches the corresponding CSV file (e.g., `./setting.csv`).
+ * - Parses the CSV data using Papa.parse.
+ * - In the parsing complete callback:
+ *   - Unchecks all score checkboxes associated with the setting.
+ *   - Checks the first score checkbox.
+ *   - Populates the input table with parsed data by calling `phraseInputTable`.
+ *   - Toggles categories such as "Metrics", "Type", and "Horizons" for the setting.
+ *   - Calls `toggleSelectAll` to set score options.
+ */
+function loadDataAndInitializeSettings(settings) {
+  settings.forEach(setting => {
+    fetch(`./${setting}.csv`)
+      .then(response => response.text())
+      .then(text =>
+        Papa.parse(text, {
+          header: true,
+          dynamicTyping: true,
+          complete: results => {
+            for (let i1 = 1; i1 < 4; i1++) {
+              const scoreBox = document.getElementById(`Score-${setting}/${i1}`)
+              if (scoreBox != null) {
+                scoreBox.checked = false
+              } else {
+                console.log(`no scoreBox of ${setting}/${i1}`)
+              }
             }
-          }
-          button = document.getElementById(`Score-${setting}/1`)
-          if (button) button.checked = true
-          phraseInputTable(results.data, setting)
-          toggleCategory('Metrics', setting, true, false)
-          toggleCategory('Type', setting, true, false)
-          toggleCategory('Horizons', setting, true, false)
-          // 设置评分选项
-          toggleSelectAll(true, setting)
-          // no use???
-          // display(setting)
-        },
-      })
-    )
-})
+            button = document.getElementById(`Score-${setting}/1`)
+            if (button) button.checked = true
+            phraseInputTable(results.data, setting)
+            toggleCategory('Metrics', setting, true, false)
+            toggleCategory('Type', setting, true, false)
+            toggleCategory('Horizons', setting, true, false)
+            // 设置评分选项
+            toggleSelectAll(true, setting)
+          },
+        })
+      )
+  })
+}
 
 function phraseInputTable(input, setting) {
   // phrase method
@@ -101,7 +135,7 @@ function phraseInputTable(input, setting) {
 
   // 按大类分组数据集
   const groupedDatasets = allData[setting].dataset.reduce((acc, dataset) => {
-    const [category, name] = dataset.split('/')
+    const [category, name] = dataset.replace(' ', '_').split('/')
     if (!acc[category]) acc[category] = []
     acc[category].push(name)
     return acc
@@ -142,14 +176,14 @@ function phraseInputTable(input, setting) {
     )
 
     categoryLabel.appendChild(categoryCheckbox)
-    categoryLabel.appendChild(document.createTextNode(` ${category}`))
+    categoryLabel.appendChild(document.createTextNode(` ${category.replace('_', ' ')}`))
     categoryDiv.appendChild(categoryLabel)
 
     const datasetContainer = document.createElement('div')
 
     // 添加小标题
     groupedDatasets[category].forEach(name => {
-      name = name.replace('_', '-')
+      // name = name.replace('_', '-')
       const checkboxItem = document.createElement('div')
       checkboxItem.className = 'checkbox-item'
 
@@ -414,11 +448,11 @@ function submitSelection(setting) {
   const checkboxes = document.querySelectorAll(`*[class*="${setting}"]`)
   const selectTypes = []
   const selectMetrics = []
-  const selectHorizons = []
+  // const selectHorizons = []
   const selectDatasets = []
   let selectScore = null
 
-  // Iterate through each checkbox and categorize based on its ID
+  // 遍历每个 checkbox 并根据其ID进行分类
   checkboxes.forEach(checkbox => {
     if (checkbox.checked) {
       const idParts = checkbox.id.split('/')
@@ -428,10 +462,11 @@ function submitSelection(setting) {
         selectMetrics.push(idParts[1])
       } else if (checkbox.id.includes('Score')) {
         selectScore = idParts[1].split('-')[0]
-      } else if (checkbox.id.includes('Horizons')) {
-        selectHorizons.push(idParts[1])
+        // } else if (checkbox.id.includes('Horizons')) {
+        //   selectHorizons.push(idParts[1])
       } else {
-        const dataset = `${checkbox.id.split('-')[0]}/${idParts[1]}`
+        // dataset
+        const dataset = `${checkbox.id.split('-')[0].replace('_', ' ')}/${idParts[1]}`
         selectDatasets.push(dataset)
       }
     }
@@ -456,9 +491,9 @@ function submitSelection(setting) {
     selectTypes.forEach(type => {
       selectedMethods = selectedMethods.concat(MODEL_TYPE[type])
     })
-    // Filter methods that exist in all_data
-    console.log(allData[setting])
 
+    console.log(allData[setting])
+    // Filter methods that exist in all_data
     selectedMethods = selectedMethods.filter(selectedMethod =>
       allData[setting].method.hasOwnProperty(selectedMethod)
     )
@@ -471,15 +506,16 @@ function submitSelection(setting) {
 
   // Process selected metrics, horizons, and datasets to update rankings
   selectMetrics.forEach(metric => {
-    selectHorizons.forEach(horizon => {
-      selectDatasets.forEach(dataset => {
-        const key = `${dataset}-${horizon}-${metric.toLowerCase()}`
-        const result = allData[setting].result[key]
-        sortedKeys = selectedMethods.sort((a, b) => result[a] - result[b])
-        rank[sortedKeys[0]].rank1 += 1
-        rank[sortedKeys[1]].rank2 += 1
-        rank[sortedKeys[2]].rank3 += 1
-      })
+    // selectHorizons.forEach(horizon => {
+    selectDatasets.forEach(dataset => {
+      const key = `${dataset}-${96}-${metric}`
+      const result = allData[setting].result[key]
+      console.log('result:', result)
+
+      sortedKeys = selectedMethods.sort((a, b) => result[a] - result[b])
+      rank[sortedKeys[0]].rank1 += 1
+      rank[sortedKeys[1]].rank2 += 1
+      rank[sortedKeys[2]].rank3 += 1
     })
   })
 
@@ -506,6 +542,7 @@ function submitSelection(setting) {
       rank3: rank[method].rank3,
     })
   })
+  console.log(rowDatas)
 
   // Sort the draw array based on score and ranks
   rowDatas.sort((a, b) => {
