@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="/TAB/js/jquery.min.js"></script>
+  <link rel="icon" type="image/png" href="https://decisionintelligence.github.io/OpenTS/figures/logo10.png">
+  <meta name="google-site-verification" content="0HzGL60Z8ChYs-wL6ogMpNB-px7tcu9PcRD1z6OQWe8" />
+  <meta name="msvalidate.01" content="FD2A799A0C64AAB3A8289819F1C2DFFB" />
+  <meta http-equiv='content-language' content='en-gb'>
+  <meta charset="utf-8">
+  
+  <title>TAB - A Comprehensive and Fair Benchmark for Time Series Analytics</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="subtitle" content="A Comprehensive and Fair Benchmark for Time Series Analytics">
+  <meta name="description" content="AlgorithmsTo investigate the strengths and limitations of different time series AD methods, we evaluate a large number of methods which can be classified into non-learning (NL), machine learning (ML),">
+<meta property="og:type" content="website">
+<meta property="og:title" content="TAB - A Comprehensive and Fair Benchmark for Time Series Analytics">
+<meta property="og:url" content="https://deforb.github.io/TAB/algorithms/index.html">
+<meta property="og:site_name" content="TAB - A Comprehensive and Fair Benchmark for Time Series Analytics">
+<meta property="og:description" content="AlgorithmsTo investigate the strengths and limitations of different time series AD methods, we evaluate a large number of methods which can be classified into non-learning (NL), machine learning (ML),">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-12-02T12:11:54.510Z">
+<meta property="article:modified_time" content="2024-12-02T12:11:54.510Z">
+<meta property="article:author" content="DecisionIntelligence |">
+<meta name="twitter:card" content="summary">
+  
+
+  <link href="/TAB/webfonts/ptserif/main.css" rel='stylesheet' type='text/css'>
+  <link href="/TAB/webfonts/source-code-pro/main.css" rel="stylesheet" type="text/css">
+  
+<link rel="stylesheet" href="/TAB/css/style.css">
+
+  
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <!-- blair add baidu tongji start... @2017.10.03 -->
+<script>
+  var _hmt = _hmt || [];
+  (function() {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?8864d";
+    var s = document.getElementsByTagName("script")[0]; 
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+<!-- blair add baidu tongji end ! @2017.10.03 -->
+<!-- jiangting add start... @2020.08.30 -->
+
+<!-- jiangting add end !  @2020.08.30 -->
+
+<header id="header" style="min-width:1040px">
+  <div id="header-outer" class="outer">
+    <div id="header-inner" class="inner">
+      <!-- <a id="main-nav-toggle" class="nav-icon" href="javascript:;"></a> -->
+      <a id="logo" style="margin:3px 0" class="logo" href="/TAB/"></a>
+      <nav id="main-nav">
+        
+          
+            <a class="main-nav-link" href="/TAB/">Overview</a>
+          
+        
+          
+            <div class="dropdown">
+              <!-- <a class="main-nav-link dropdown-toggle" href="/TAB/get%20started">Get Started <span class="caret"></span></a> -->
+              <a class="main-nav-link dropdown-toggle">Get Started <span class="caret"></span></a>
+
+              <div class="dropdown-content">
+                
+                  <a href="/TAB/get%20started/#Quickstart">Quickstart</a>
+                
+                  <a href="/TAB/get%20started/#Contact">Contact</a>
+                
+              </div>
+            </div>
+          
+        
+          
+            <div class="dropdown">
+              <!-- <a class="main-nav-link dropdown-toggle" href="/TAB/datasets">Datasets <span class="caret"></span></a> -->
+              <a class="main-nav-link dropdown-toggle">Datasets <span class="caret"></span></a>
+
+              <div class="dropdown-content">
+                
+                  <a href="/TAB/datasets/#Overview">Overview</a>
+                
+                  <a href="/TAB/datasets/#Multivariate-time-series">Multivariate time series</a>
+                
+                  <a href="/TAB/datasets/#Univariate-time-series">Univariate time series</a>
+                
+              </div>
+            </div>
+          
+        
+          
+            <a class="main-nav-link" href="/TAB/algorithms">Algorithms</a>
+          
+        
+          
+            <div class="dropdown">
+              <!-- <a class="main-nav-link dropdown-toggle" href="/TAB/">Leaderboards <span class="caret"></span></a> -->
+              <a class="main-nav-link dropdown-toggle">Leaderboards <span class="caret"></span></a>
+
+              <div class="dropdown-content">
+                
+                  <a href="/TAB/leaderboards/univariate_time_series">Univariate time series</a>
+                
+                  <a href="/TAB/leaderboards/multivariate_time_series">Multivariate time series</a>
+                
+                  <a href="/TAB/leaderboards/foundation_model">Foundation model</a>
+                
+              </div>
+            </div>
+          
+        
+          
+            <a class="main-nav-link" href="/TAB/team">Team</a>
+          
+        
+          
+            <a class="main-nav-link" target="_blank" rel="noopener" href="https://github.com/DevCrafterLZY/TAB">Github</a>
+          
+        
+      </nav>
+    </div>
+  </div>
+</header>
+
+<style>
+  #header {
+    position: relative;
+    z-index: 10;
+    overflow: visible;
+  }
+
+  #header-outer {
+    position: relative;
+    z-index: 10;
+    overflow: visible;
+  }
+
+  #header-inner {
+    position: relative;
+    z-index: 10;
+    overflow: visible;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    width: 1000px; /* 设置最大宽度 */
+    margin: auto; /* 居中对齐 */ /* 确保占满父元素的宽度 */
+    flex-wrap: nowrap; /* 保持内容在同一行 */
+  }
+
+  .dropdown {
+    position: relative;
+    display: inline-block;
+    text-align: right;
+  }
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1000;
+    top: 100%;
+    right: 0;
+    width: auto;
+    min-width: 100%;
+    white-space: nowrap;
+  }
+
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+    border-top: 1px solid #ddd;
+  }
+
+  .dropdown-content a:first-child {
+    border-top: none;
+  }
+
+  .dropdown-content a:hover {
+    background-color: #f1f1f1;
+  }
+
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+
+  .dropdown-toggle::after {
+    content: " ▼";
+    font-size: 0.55em;
+    vertical-align: middle;
+  }
+
+  #main-nav {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    justify-content: space-around;
+    flex-wrap: nowrap; /* 保持内容在同一行 */
+  }
+
+  .main-nav-link {
+    padding: 0 10px; /* 减少 padding，缩小栏目间距 */
+  }
+
+  
+
+  @media (max-width: 480px) {
+    .main-nav-link {
+      padding: 5px; /* 进一步减少 padding，在小屏幕上更紧凑 */
+      flex: 1;
+      text-align: center;
+    }
+  }
+</style>
+
+    <br>
+    <section id="main" class="outer"><article id="page-" class="article article-type-page" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    
+    <div class="article-meta">
+      <!--<a href="/TAB/algorithms/index.html" class="article-date">
+  <time datetime="2024-12-02T12:11:54.510Z" itemprop="datePublished">2024-12-02</time>
+</a>-->
+      <!-- 
+--><!-- by blair 160724 -->
+      <!-- by blair
+      
+      -->
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Algorithms"><a href="#Algorithms" class="headerlink" title="Algorithms"></a>Algorithms</h1><p>To investigate the strengths and limitations of different time series AD methods, we evaluate a large number of methods which can be classified into non-learning (NL), machine learning (ML), deep learning (DL), LLM-based, and Time-series pre-trained (TS pre-trained) methods. Overall, 33 methods are included for a comprehensive univariate AD comparison. ARIMA, SARIMA, ZMS, Stat, and SR are removed from multivariate anomaly detection, thus 28 methods are used for multivariate AD comparison. For conciseness, we omit their detailed descriptions and briefly categorize them based on their distinct technical approaches which are reported in Table 4.</p>
+<style>
+  /* 基本表格样式 */
+  table.my-table {
+    min-width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    border: none; /* 去除表格边框 */
+  }
+
+  /* 表头样式 */
+  table.my-table th {
+    background-color: #f2f2f2; /* 表头背景色（奇数行浅灰色） */
+    color: black; /* 表头文字颜色 */
+    font-weight: bold; /* 表头字体加粗 */
+    padding: 10px; /* 调整表头内边距 */
+    text-align: center; /* 居中对齐 */
+    border: none;
+  }
+
+  /* 偶数行背景色 */
+  table.my-table tr:nth-child(odd) {
+    background-color: #ffffff; /* 偶数行背景色（白色） */
+  }
+
+  /* 奇数行背景色 */
+  table.my-table tr:nth-child(even) {
+    background-color: #f2f2f2; /* 奇数行背景色（浅灰色） */
+  }
+  /* 单元格样式 */
+  table.my-table td {
+    padding: 10px; /* 调整单元格内边距 */
+    text-align: center; /* 居中对齐 */
+    border: none; /* 去除单元格边框 */
+    white-space: nowrap; /* 防止文本换行 */
+    vertical-align: middle; /* 添加文字上下对齐 */
+  }
+
+   /* 纵向合并 */
+  .my-table .vertical-rl {
+    writing-mode: vertical-rl; 
+    transform: rotate(180deg); 
+    vertical-align: middle;
+    /* border-bottom: 2px solid grey;  */
+  }
+
+  table.my-table tr:nth-child(6),
+  table.my-table tr:nth-child(13),
+  table.my-table tr:nth-child(27),
+  table.my-table tr:nth-child(29) {
+    /* border-bottom: 2px solid grey; */
+  }
+</style>
+
+<div style="display: flex;justify-content: center; /* 水平居中 */padding: 0;">
+<table class="my-table" style="width: 90%;">
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>Abbrev.</th>
+      <th>Area</th>
+      <th>Key Technology</th>
+      <th>UTSF</th>
+      <th>MTSF</th>
+    </tr>
+</thead>
+<tbody>
+    <tr>
+        <td><b>LOF</b></td>
+        <td>LOF</td>
+        <td class="vertical-rl" rowspan="6">Non Learning</td>
+        <td>Density</td>
+        <td>√</td>
+        <td>√</td>
+    </tr>
+    <tr>
+        <td><b>HBOS</b></td>
+        <td>HBOS</td>
+        <td>Histogram</td>
+        <td>√</td>
+        <td>√</td>
+    </tr>
+    <tr>
+        <td><b>ARIMA</b></td>
+        <td>ARIMA</td>
+        <td>Autoregressive + Moving Average</td>
+        <td>√</td>
+        <td>×</td>
+    </tr>
+    <tr>
+        <td><b>SARIMA</b></td>
+        <td>SARIMA</td>
+        <td>Seasonal ARIMA</td>
+        <td>√</td>
+        <td>×</td>
+    </tr>
+    <tr>
+        <td><b>StatThreshold</b></td>
+        <td>Stat</td>
+        <td>Static Thresholding</td>
+        <td>√</td>
+        <td>×</td>
+    </tr>
+    <tr>
+        <td><b>ZMS</b></td>
+        <td>ZMS</td>
+        <td>Multiple z-score</td>
+        <td>√</td>
+        <td>×</td>
+    </tr>
+    <tr>
+        <td><b>OCSVM</b></td>
+        <td>Ocsvm</td>
+        <td class="vertical-rl" rowspan="7" style="background-color: #f2f2f2;">Machine Learning</td>
+        <td>Classification</td>
+        <td>√</td>
+        <td>√</td>
+    </tr>
+    <tr>
+        <td><b>DeepPoint</b></td>
+        <td>DP</td>
+        <td>Multilayer Perceptron</td>
+        <td>√</td>
+        <td>√</td>
+    </tr>
+    <tr>
+        <td><b>KNN</b></td>
+        <td>KNN</td>
+        <td>K-nearest Neighbors</td>
+        <td>√</td>
+        <td>√</td>
+    </tr>
+    <tr>
+        <td><b>Isolation Forest</b></td>
+        <td>IF</td>
+        <td>Isolation Tree</td>
+        <td>√</td>
+        <td>√</td>
+    </tr>
+    <tr>
+        <td><b>Spectral Residual</b></td>
+        <td>SR</td>
+        <td>Frequency Spectrum + Fourier Transform</td>
+        <td>√</td>
+        <td>×</td>
+    </tr>
+    <tr>
+        <td><b>LODA</b></td>
+        <td>LODA</td>
+        <td>Ensemble Learning</td>
+        <td>√</td>
+        <td>√</td>
+    </tr>
+    <tr>
+        <td><b>PCA</b></td>
+        <td>PCA</td>
+        <td>Dimensionality reduction + Reconstruction</td>
+        <td>√</td>
+        <td>√</td>
+    </tr>
+    <tr>
+        <td><b>DAGMM</b></td>
+        <td>Dagmm</td>
+        <td class="vertical-rl" rowspan="14" style="background-color: #ffffff;">Deep Learning</td>
+        <td>Deep autoencoder + Gaussian Mixture</td>
+        <td>√</td>
+        <td>√</td>
+    </tr>
+    <tr>
+        <td><b>iTransformer</b></td>
+        <td>iTrans</td>
+        <td>Inverted Transformer</td>
+        <td>√</td>
+        <td>√</td>
+    </tr>
+    <tr>
+        <td><b>NLinear</b></td>
+        <td>NLin</td>
+        <td>Linear + Simple normalization</td>
+        <td>√</td>
+        <td>√</td>
+    </tr>
+    <tr>
+        <td><b>DLinear</b></td>
+        <td>DLin</td>
+        <td>Linear + Decomposition</td>
+        <td>√</td>
+        <td>√</td>
+    </tr>
+    <tr>
+        <td><b>AE</b></td>
+        <td>AE</td>
+        <td>AutoEncoder</td>
+        <td>√</td>
+        <td>√</td>
+    </tr>
+    <tr>
+        <td><b>ModernTCN</b></td>
+        <td>Modern</td>
+        <td>TCN with bigger receptive field</td>
+        <td>√</td>
+        <td>√</td>
+    </tr>
+    <tr>
+        <td><b>PatchTST</b></td>
+        <td>Patch</td>
+        <td>Channel Independent + Patchify</td>
+        <td>√</td>
+        <td>√</td>
+    </tr>
+    <tr>
+        <td><b>TimesNet</b></td>
+        <td>TsNet</td>
+        <td>Temporal 2D-variations + Multi-periodicity</td>
+        <td>√</td>
+        <td>√</td>
+    </tr>
+    <tr>
+        <td><b>Anomaly Transformer</b></td>
+        <td>ATrans</td>
+        <td>Anomaly Attention + <br>
+        Association Discrepancy</td>
+        <td>√</td>
+        <td>√</td>
+    </tr>
+    <tr>
+        <td><b>VAE</b></td>
+        <td>VAE</td>
+        <td>Variational AutoEncoder</td>
+        <td>√</td>
+        <td>√</td>
+    </tr>
+    <tr>
+        <td><b>TranAD</b></td>
+        <td>TranAD</td>
+        <td>Self-conditioning + Meta Learning + <br>
+        Two-Phase Adversarial Training</td>
+        <td>√</td>
+        <td>√</td>
+    </tr>
+    <tr>
+        <td><b>DualTF</b></td>
+        <td>DualTF</td>
+        <td>Time-Frequency combination + Anomaly Transformer</td>
+        <td>√</td>
+        <td>√</td>
+    </tr>
+    <tr>
+        <td><b>LSTMED</b></td>
+        <td>LSTM</td>
+        <td>LSTM + Encoder-Decoder-based</td>
+        <td>√</td>
+        <td>√</td>
+    </tr>
+    <tr>
+        <td><b>DCdetector</b></td>
+        <td>DC</td>
+        <td>Multi-scale Dual Attention + <br>
+        Contrastive Learning</td>
+        <td>√</td>
+        <td>√</td>
+    </tr>
+    <tr>
+        <td><b>GPT4TS</b></td>
+        <td>GPT4TS</td>
+        <td class="vertical-rl" rowspan="2">LLM-based</td>
+        <td>Parameter-Efficient Fine-Tuning</td>
+        <td>√</td>
+        <td>√</td>
+    </tr>
+    <tr>
+        <td><b>UniTime</b></td>
+        <td>UniTime</td>
+        <td>Domain Instructions + <br>
+        Masking Technique + <br>
+        Cross-Domain Training Strategy</td>
+        <td>√</td>
+        <td>√</td>
+    </tr>
+    <tr>
+        <td><b>Timer</b></td>
+        <td>Timer</td>
+        <td class="vertical-rl" rowspan="4" style="background-color: #ffffff;">Pre-trained</td>
+        <td>Single-Series Sequence + Autoregressive</td>
+        <td>√</td>
+        <td>√</td>
+    </tr>
+    <tr>
+        <td><b>UniTS</b></td>
+        <td>UniTS</td>
+        <td>Dynamic Linear + Prompt Learning + <br>
+        Unified Masked Reconstruction</td>
+        <td>√</td>
+        <td>√</td>
+    </tr>
+    <tr>
+        <td><b>TinyTimeMixer</b></td>
+        <td>ttm</td>
+        <td>Adaptive Patching + <br>
+        Data Augmentation via Downsampling + <br>
+        Resolution Prefix Tuning + Exogenous Mixer</td>
+        <td>√</td>
+        <td>√</td>
+    </tr>
+    <tr>
+        <td><b>Moment</b></td>
+        <td>Moment</td>
+        <td>Masking Technique + <br>
+        Lightweight Reconstruction Head</td>
+        <td>√</td>
+        <td>√</td>
+    </tr>
+</tbody>
+    
+  </tbody>
+</table>
+</div>
+
+<center style="font-size:14px;color:#C0C0C0;text-decoration:underline">Table 4: Overview of comparison methods.
+</center>
+
+      
+    
+    </div>
+    
+    
+      <footer class="article-footer">
+        <!-- <div class="well" style="width:100px; height:30px;"></div>  by blair-->
+        
+ <!-- by blair add 160724-->
+        <!--
+        <div style="width:100px; height:30px;"></div> by blair add 160724
+        -->
+        
+
+      </footer>
+    
+  </div>
+  
+    
+  
+</article>
+
+</section>
+    <!-- <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2024 DecisionIntelligence |&nbsp;
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>, theme by <a target="_blank" rel="noopener" href="http://github.com/52binge/hexo-theme-blairos">blairos</a>
+    </div>
+  </div>
+</footer> -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX"],
+    tex2jax: {
+      inlineMath: [ ['$','$'], ['\\(','\\)'] ],
+      displayMath: [ ['$$','$$']],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript" >
+</script>
+
+    
+
+
+
+
+
+
+<script src="/TAB/js/script.js"></script>
+
+
+  </div>
+</body>
+</html>
