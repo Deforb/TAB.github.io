@@ -80,7 +80,7 @@ function loadDataAndInitializeSettings(settings) {
             toggleCategory('Horizons', setting, true, false)
             // 设置评分选项
             toggleSelectAll(true, setting)
-            display(setting)
+            // display(setting)
           },
         })
       )
@@ -562,7 +562,7 @@ function renderLeaderboard(rowDatas, setting) {
   tbody.innerHTML = ''
   const fragment = document.createDocumentFragment()
 
-  function formatNumber(num) {
+  formatNumber = num => {
     // if (num >= 1e9) {
     //     return (num / 1e9).toFixed(1) + 'B';  // 表示十亿
     // } else if (num >= 1e6) {
@@ -572,7 +572,7 @@ function renderLeaderboard(rowDatas, setting) {
     // } else {
     //     return num.toString();  // 小于千的数字
     // }
-    return (num / 1e6).toFixed(2) + 'M'
+    ;(num / 1e6).toFixed(2) + 'M'
   }
 
   rowDatas.forEach((rowData, index) => {
@@ -584,7 +584,6 @@ function renderLeaderboard(rowDatas, setting) {
     row.innerHTML = `
       <td>${index + 1}</td>
       <td>${method}</td>
-      <td>${formatNumber(parameters)}</td>
       <td>${score}</td>
       <td>${rank1}</td>
       <td>${rank2}</td>

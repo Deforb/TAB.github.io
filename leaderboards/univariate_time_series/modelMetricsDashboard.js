@@ -552,10 +552,10 @@ function submitSelection(setting) {
   })
 
   // Render the table with the calculated draw data
-  draw_table(rowDatas, setting)
+  renderLeaderboard(rowDatas, setting)
 }
 
-function draw_table(rowDatas, setting) {
+function renderLeaderboard(rowDatas, setting) {
   const tbody = document.querySelector(`#${setting} tbody`)
   tbody.innerHTML = ''
   const fragment = document.createDocumentFragment()
@@ -582,7 +582,6 @@ function draw_table(rowDatas, setting) {
     row.innerHTML = `
       <td>${index + 1}</td>
       <td>${method}</td>
-      <td>${formatNumber(parameters)}</td>
       <td>${score}</td>
       <td>${rank1}</td>
       <td>${rank2}</td>

@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://deforb.github.io/TAB/leaderboards/univariate_time_series/index.html</loc>
+    <loc>https://deforb.github.io/TAB/leaderboards/multivariate_time_series/index.html</loc>
     
     <lastmod>2024-12-04</lastmod>
     
@@ -11,7 +11,16 @@
   </url>
   
   <url>
-    <loc>https://deforb.github.io/TAB/leaderboards/multivariate_time_series/index.html</loc>
+    <loc>https://deforb.github.io/TAB/leaderboards/foundation_model/index.html</loc>
+    
+    <lastmod>2024-12-04</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://deforb.github.io/TAB/leaderboards/univariate_time_series/index.html</loc>
     
     <lastmod>2024-12-04</lastmod>
     
@@ -77,15 +86,6 @@
     <loc>https://deforb.github.io/TAB/get%20started/index.html</loc>
     
     <lastmod>2024-12-02</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://deforb.github.io/TAB/leaderboards/foundation_model/index.html</loc>
-    
-    <lastmod>2024-11-27</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
