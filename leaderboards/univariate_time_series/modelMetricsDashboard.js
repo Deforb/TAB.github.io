@@ -77,7 +77,7 @@ function loadDataAndInitializeSettings(settings) {
             phraseInputTable(results.data, setting)
             toggleCategory('Metrics', setting, true, false)
             toggleCategory('Type', setting, true, false)
-            toggleCategory('Horizons', setting, true, false)
+            // toggleCategory('Horizons', setting, true, false)
             // 设置评分选项
             toggleSelectAll(true, setting)
           },
@@ -121,7 +121,7 @@ function phraseInputTable(input, setting) {
     const key = entry['Dataset-Quantity-metrics']
     if (!key) continue
 
-    const [data, horizon, metric] = key.split('-')
+    const [data, metric] = key.split('-96-')
 
     if (!allData[setting].dataset.includes(data)) {
       allData[setting].dataset.push(data)
@@ -262,10 +262,13 @@ function toggleCategory(category, setting, isChecked, flush = true) {
  */
 function toggleSelectAll(selectAllCheckbox, setting) {
   const container = document.getElementById(`all-${setting}`)
-  const checkboxes = container.querySelectorAll('input[type="checkbox"]')
-  checkboxes.forEach(checkbox => {
-    checkbox.checked = selectAllCheckbox
-  })
+  if (container) {
+    const checkboxes = container.querySelectorAll('input[type="checkbox"]')
+    checkboxes.forEach(checkbox => {
+      checkbox.checked = selectAllCheckbox
+    })
+  }
+
   submitSelection(setting)
 }
 
@@ -448,7 +451,7 @@ function submitSelection(setting) {
   const selectTypes = []
   const selectMetrics = []
   // const selectHorizons = []
-  const selectDatasets = []
+  const selectDatasets = allData[setting].dataset
   let selectScore = null
 
   // 遍历每个 checkbox 并根据其ID进行分类
@@ -463,11 +466,12 @@ function submitSelection(setting) {
         selectScore = idParts[1].split('-')[0]
         // } else if (checkbox.id.includes('Horizons')) {
         //   selectHorizons.push(idParts[1])
-      } else {
-        // dataset
-        const dataset = `${checkbox.id.split('-')[0].replace('_', ' ')}/${idParts[1]}`
-        selectDatasets.push(dataset)
       }
+      // else {
+      //   // dataset
+      //   const dataset = `${checkbox.id.split('-')[0].replace('_', ' ')}/${idParts[1]}`
+      //   selectDatasets.push(dataset)
+      // }
     }
   })
 
@@ -475,28 +479,21 @@ function submitSelection(setting) {
   const rank = {}
   let selectedMethods = []
 
-  if (setting === 'zero') {
-    // Predefined methods for 'zero' setting
-    ;['TimesFM', 'Timer', 'UniTS', 'TTM', 'MOIRAI', 'ROSE'].forEach(method => {
-      rank[method] = { rank1: 0, rank2: 0, rank3: 0, score: 0 }
-    })
-  } else {
-    // If no types are selected, include all types and reset datasets
-    if (selectTypes.length === 0) {
-      selectTypes.push('Pretrain-Model', 'LLM-Based-Model', 'Specific-Model')
-      selectDatasets.length = 0
-    }
-    // Aggregate methods based on selected types
-    selectTypes.forEach(type => {
-      selectedMethods = selectedMethods.concat(MODEL_TYPE[type])
-    })
-
-    // console.log(allData[setting])
-    // Filter methods that exist in all_data
-    selectedMethods = selectedMethods.filter(selectedMethod =>
-      allData[setting].method.hasOwnProperty(selectedMethod)
-    )
+  // If no types are selected, include all types and reset datasets
+  if (selectTypes.length === 0) {
+    selectTypes.push('Pretrain-Model', 'LLM-Based-Model', 'Specific-Model')
+    selectDatasets.length = 0
   }
+  // Aggregate methods based on selected types
+  selectTypes.forEach(type => {
+    selectedMethods = selectedMethods.concat(MODEL_TYPE[type])
+  })
+
+  // console.log(allData[setting])
+  // Filter methods that exist in all_data
+  selectedMethods = selectedMethods.filter(selectedMethod =>
+    allData[setting].method.hasOwnProperty(selectedMethod)
+  )
 
   // Initialize rank object for each selected method
   selectedMethods.forEach(method => {
@@ -509,7 +506,9 @@ function submitSelection(setting) {
     selectDatasets.forEach(dataset => {
       const key = `${dataset}-${96}-${metric}`
       const result = allData[setting].result[key]
-      // console.log('result:', result)
+      if (!result) {
+        console.log(`no result of ${key}`)
+      }
 
       sortedKeys = selectedMethods.sort((a, b) => result[a] - result[b])
       rank[sortedKeys[0]].rank1 += 1
@@ -541,7 +540,6 @@ function submitSelection(setting) {
       rank3: rank[method].rank3,
     })
   })
-  console.log(rowDatas)
 
   // Sort the draw array based on score and ranks
   rowDatas.sort((a, b) => {

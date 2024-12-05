@@ -29,11 +29,13 @@ const MODEL_TYPE = {
   'Pre-trained-Model': ['Timer', 'UniTS', 'TinyTimeMixer', 'Moment'],
 }
 
+
 const allData = {
-  zero: { method: {}, dataset: [], metric: [], result: {} },
-  few: { method: {}, dataset: [], metric: [], result: {} },
-  full: { method: {}, dataset: [], metric: [], result: {} },
+  uni: { method: {}, dataset: [], metric: [], result: {} },
+  multi: { method: {}, dataset: [], metric: [], result: {} },
 }
+
+const forecastTaskType = Object.keys(allData)
 
 // const settings = ['few', 'full']
 // const settings = ['full']
@@ -55,36 +57,38 @@ const allData = {
  *   - Toggles categories such as "Metrics", "Type", and "Horizons" for the setting.
  *   - Calls `toggleSelectAll` to set score options.
  */
-function loadDataAndInitializeSettings(settings, timeSeriesType = '') {
-  settings.forEach(setting => {
-    fetch(`./${setting}.csv`)
-      .then(response => response.text())
-      .then(text =>
-        Papa.parse(text, {
-          header: true,
-          dynamicTyping: true,
-          complete: results => {
-            for (let i1 = 1; i1 < 4; i1++) {
-              const scoreBox = document.getElementById(`Score-${setting}/${i1}`)
-              if (scoreBox !== null) {
-                scoreBox.checked = false
-              } else {
-                console.log(`no scoreBox of Score-${setting}/${i1}`)
-              }
+function loadDataAndInitializeSettings(timeSeriesType) {
+  fetch(`./${timeSeriesType}.csv`)
+    .then(response => response.text())
+    .then(text =>
+      Papa.parse(text, {
+        header: true,
+        dynamicTyping: true,
+        complete: results => {
+          for (let i1 = 1; i1 < 4; i1++) {
+            const scoreBox = document.getElementById(`Score-${timeSeriesType}/${i1}`)
+            if (scoreBox !== null) {
+              scoreBox.checked = false
+            } else {
+              console.log(`no scoreBox of Score-${timeSeriesType}/${i1}`)
             }
-            button = document.getElementById(`Score-${setting}/1`)
-            if (button) button.checked = true
-            phraseInputTable(results.data, setting)
-            toggleCategory('Metrics', setting, true, false)
-            toggleCategory('Type', setting, true, false)
-            // toggleCategory('Horizons', setting, true, false)
-            // 设置评分选项
-            toggleSelectAll(true, setting)
-            // display(setting)
-          },
-        })
-      )
-  })
+          }
+          button = document.getElementById(`Score-${timeSeriesType}/1`)
+          if (button) {
+            button.checked = true
+          } else {
+            console.log(`no button of Score-${timeSeriesType}/1`)
+          }
+          phraseInputTable(results.data, timeSeriesType)
+          toggleCategory('Metrics', timeSeriesType, true, false)
+          toggleCategory('Type', timeSeriesType, true, false)
+          // toggleCategory('Horizons', setting, true, false)
+          // 设置评分选项
+          toggleSelectAll(true, timeSeriesType)
+          // display(setting)
+        },
+      })
+    )
 }
 
 function phraseInputTable(input, setting) {
@@ -103,16 +107,16 @@ function phraseInputTable(input, setting) {
 
   const keys = Object.keys(methods).filter(item => item !== 'Dataset-Quantity-metrics')
   // 存入all_data
-  keys.forEach(name => {
-    allData[setting].method[name] = {
-      contact_text: contactTexts[name] || '',
-      contact_url: contactUrls[name],
-      paper_url: paperUrls[name],
-      code_url: codeUrls[name],
-      publication: publications[name],
-      bib: bibs[name],
-      year: years[name],
-      parameters: parametersList[name],
+  keys.forEach(method => {
+    allData[setting].method[method] = {
+      contact_text: contactTexts[method] || '',
+      contact_url: contactUrls[method],
+      paper_url: paperUrls[method],
+      code_url: codeUrls[method],
+      publication: publications[method],
+      bib: bibs[method],
+      year: years[method],
+      parameters: parametersList[method],
     }
   })
 
@@ -122,7 +126,7 @@ function phraseInputTable(input, setting) {
     const key = entry['Dataset-Quantity-metrics']
     if (!key) continue
 
-    const [data, horizon, metric] = key.split('-')
+    const [data, metric] = key.split('-96-')
 
     if (!allData[setting].dataset.includes(data)) {
       allData[setting]['dataset'].push(data)
