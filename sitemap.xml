@@ -4,7 +4,25 @@
   <url>
     <loc>https://deforb.github.io/TAB/leaderboards/foundation_model/index.html</loc>
     
-    <lastmod>2024-12-05</lastmod>
+    <lastmod>2024-12-06</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://deforb.github.io/TAB/algorithms/index.html</loc>
+    
+    <lastmod>2024-12-06</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://deforb.github.io/TAB/2024/11/21/hello-world/</loc>
+    
+    <lastmod>2024-12-06</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -56,27 +74,9 @@
   </url>
   
   <url>
-    <loc>https://deforb.github.io/TAB/2024/11/21/hello-world/</loc>
-    
-    <lastmod>2024-12-03</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://deforb.github.io/TAB/datasets/index.html</loc>
     
     <lastmod>2024-12-03</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://deforb.github.io/TAB/algorithms/index.html</loc>
-    
-    <lastmod>2024-12-02</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>

@@ -24,11 +24,11 @@ const MODEL_TYPE = {
     'DualTF',
     'LSTMED',
     'DCdetector',
+    'LSTM',
   ],
   'LLM-Based-Model': ['GPT4TS', 'UniTime'],
-  'Pre-trained-Model': ['Timer', 'UniTS', 'TinyTimeMixer', 'Moment'],
+  'Pre-trained-Model': ['Timer', 'UniTS', 'TinyTimeMixer', 'Moment', 'TTM'],
 }
-
 
 const allData = {
   uni: { method: {}, dataset: [], metric: [], result: {} },
@@ -475,30 +475,29 @@ function submitSelection(setting) {
   const rank = {}
   let selectedMethods = []
 
-  if (setting === 'zero') {
-    // Predefined methods for 'zero' setting
-    ;['TimesFM', 'Timer', 'UniTS', 'TTM', 'MOIRAI', 'ROSE'].forEach(method => {
-      rank[method] = { rank1: 0, rank2: 0, rank3: 0, score: 0 }
-    })
-  } else {
-    // If no types are selected, include all types and reset datasets
-    if (selectTypes.length === 0) {
-      selectTypes.push('Pretrain-Model', 'LLM-Based-Model', 'Specific-Model')
-      selectDatasets.length = 0
-    }
-    // Aggregate methods based on selected types
-    selectTypes.forEach(type => {
-      MODEL_TYPE[type].forEach(item => {
-        selectedMethods = selectedMethods.concat([item + '(zero)', item + '(few)', item + '(full)'])
-      })
-    })
-
-    // console.log(allData[setting])
-    // Filter methods that exist in all_data
-    selectedMethods = selectedMethods.filter(selectedMethod =>
-      allData[setting].method.hasOwnProperty(selectedMethod)
+  // If no types are selected, include all types and reset datasets
+  if (selectTypes.length === 0) {
+    selectTypes.push(
+      'Non-Learning-Model',
+      'Machine-Learning-Model',
+      'Deep-Learning-Model',
+      'LLM-Based-Model',
+      'Pre-trained-Model'
     )
+    selectDatasets.length = 0
   }
+  // Aggregate methods based on selected types
+  selectTypes.forEach(type => {
+    MODEL_TYPE[type].forEach(item => {
+      selectedMethods = selectedMethods.concat([item + '(zero)', item + '(few)', item + '(full)'])
+    })
+  })
+
+  // console.log(allData[setting])
+  // Filter methods that exist in all_data
+  selectedMethods = selectedMethods.filter(selectedMethod =>
+    allData[setting].method.hasOwnProperty(selectedMethod)
+  )
 
   // Initialize rank object for each selected method
   selectedMethods.forEach(method => {
@@ -506,17 +505,22 @@ function submitSelection(setting) {
   })
 
   // Process selected metrics, horizons, and datasets to update rankings
-  selectMetrics.forEach(metric => {
-    // selectHorizons.forEach(horizon => {
-    selectDatasets.forEach(dataset => {
+  selectDatasets.forEach(dataset => {
+    selectMetrics.forEach(metric => {
       const key = `${dataset}-${96}-${metric}`
       const result = allData[setting].result[key]
-      // console.log('result:', result)
 
-      sortedKeys = selectedMethods.sort((a, b) => result[a] - result[b])
-      rank[sortedKeys[0]].rank1 += 1
-      rank[sortedKeys[1]].rank2 += 1
-      rank[sortedKeys[2]].rank3 += 1
+      const sortedMethods = selectedMethods.sort((a, b) => result[b] - result[a])
+
+      rank[sortedMethods[0]].rank1 += 1
+      let i = 1
+      while (result[sortedMethods[i]] == 1) {
+        rank[sortedMethods[i]].rank1 += 1
+        i += 1
+      }
+
+      rank[sortedMethods[i]].rank2 += 1
+      rank[sortedMethods[i + 1]].rank3 += 1
     })
   })
 
