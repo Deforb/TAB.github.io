@@ -581,7 +581,7 @@ function renderLeaderboard(rowDatas, setting) {
   tbody.innerHTML = ''
   const fragment = document.createDocumentFragment()
 
-  formatNumber = num => {
+  const formatNumber = num => {
     // if (num >= 1e9) {
     //     return (num / 1e9).toFixed(1) + 'B';  // 表示十亿
     // } else if (num >= 1e6) {
@@ -591,7 +591,7 @@ function renderLeaderboard(rowDatas, setting) {
     // } else {
     //     return num.toString();  // 小于千的数字
     // }
-    ;(num / 1e6).toFixed(2) + 'M'
+    return (num / 1e6).toFixed(2) + 'M'
   }
 
   rowDatas.forEach((rowData, index) => {

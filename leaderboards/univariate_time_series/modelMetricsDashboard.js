@@ -60,7 +60,19 @@ const allData = {
 function loadDataAndInitializeSettings(settings) {
   settings.forEach(setting => {
     fetch(`./${setting}.CSV`)
-      .then(response => response.text())
+      .then(response => {
+        if (!response.ok) {
+          // 如果请求失败，尝试使用小写的 .csv 文件
+          return fetch(`./${setting}.csv`)
+        }
+        return response
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Cannot fetch file ./${setting}.CSV or ./${setting}.csv`)
+        }
+        return response.text()
+      })
       .then(text =>
         Papa.parse(text, {
           header: true,
@@ -74,17 +86,19 @@ function loadDataAndInitializeSettings(settings) {
                 console.log(`no scoreBox of ${setting}/${i1}`)
               }
             }
-            button = document.getElementById(`Score-${setting}/1`)
-            if (button) button.checked = true
+            const button = document.getElementById(`Score-${setting}/1`)
+            button.checked = true
             phraseInputTable(results.data, setting)
             toggleCategory('Metrics', setting, true, false)
             toggleCategory('Type', setting, true, false)
-            // toggleCategory('Horizons', setting, true, false)
             // 设置评分选项
             toggleSelectAll(true, setting)
           },
         })
       )
+      .catch(error => {
+        console.error(`Failed to fetch data for setting ${setting}:`, error)
+      })
   })
 }
 
@@ -135,86 +149,72 @@ function phraseInputTable(input, setting) {
   }
 
   // 按大类分组数据集
-  // const groupedDatasets = allData[setting].dataset.reduce((acc, dataset) => {
-  //   const [category, name] = dataset.replace(' ', '_').split('/')
-  //   if (!acc[category]) acc[category] = []
-  //   acc[category].push(name)
-  //   return acc
-  // }, {})
+  const groupedDatasets = allData[setting].dataset.reduce((acc, dataset) => {
+    const [category, name] = dataset.replace(' ', '_').split('/')
+    if (!acc[category]) acc[category] = []
+    acc[category].push(name)
+    return acc
+  }, {})
 
-  // // 按数据集数量排序
-  // const sortedCategories =
-  //   setting !== 'zero'
-  //     ? Object.keys(groupedDatasets).sort(
-  //         (a, b) => groupedDatasets[b].length - groupedDatasets[a].length
-  //       )
-  //     : [
-  //         'Traffic',
-  //         'Energy',
-  //         'Environment',
-  //         'Economic',
-  //         'Nature',
-  //         'Health',
-  //         'Stock',
-  //         'Banking',
-  //         'Web',
-  //         'Electricity',
-  //       ]
+  // 按数据集数量排序
+  const sortedCategories = Object.keys(groupedDatasets).sort(
+    (a, b) => groupedDatasets[b].length - groupedDatasets[a].length
+  )
 
-  // // 数据集选择区域
-  // const container = document.getElementById(`dataset-container-${setting}`)
-  // sortedCategories.forEach(category => {
-  //   // 大标题
-  //   const categoryDiv = document.createElement('div')
-  //   categoryDiv.className = 'category'
+  // 数据集选择区域
+  const container = document.getElementById(`dataset-container-${setting}`)
+  sortedCategories.forEach(category => {
+    // 大标题
+    const categoryDiv = document.createElement('div')
+    categoryDiv.className = 'category'
 
-  //   const categoryLabel = document.createElement('h3')
-  //   const categoryCheckbox = document.createElement('input')
-  //   categoryCheckbox.type = 'checkbox'
-  //   categoryCheckbox.id = `select-all-${category}-${setting}`
-  //   categoryCheckbox.addEventListener('change', () =>
-  //     toggleCategory(category, setting, categoryCheckbox.checked)
-  //   )
+    const categoryLabel = document.createElement('h3')
+    const categoryCheckbox = document.createElement('input')
+    categoryCheckbox.type = 'checkbox'
+    categoryCheckbox.id = `select-all-${category}-${setting}`
+    categoryCheckbox.addEventListener('change', () =>
+      toggleCategory(category, setting, categoryCheckbox.checked)
+    )
 
-  //   categoryLabel.appendChild(categoryCheckbox)
-  //   categoryLabel.appendChild(document.createTextNode(` ${category.replace('_', ' ')}`))
-  //   categoryDiv.appendChild(categoryLabel)
+    categoryLabel.appendChild(categoryCheckbox)
+    categoryLabel.appendChild(document.createTextNode(` ${category.replace('_', ' ')}`))
+    categoryDiv.appendChild(categoryLabel)
 
-  //   const datasetContainer = document.createElement('div')
+    const datasetContainer = document.createElement('div')
 
-  //   // 添加小标题
-  //   groupedDatasets[category].forEach(name => {
-  //     // name = name.replace('_', '-')
-  //     const checkboxItem = document.createElement('div')
-  //     checkboxItem.className = 'checkbox-item'
+    // 添加小标题
+    groupedDatasets[category].forEach(name => {
+      // name = name.replace('_', '-')
+      const checkboxItem = document.createElement('div')
+      checkboxItem.className = 'checkbox-item'
 
-  //     // ??? hardcode
-  //     if (category === 'Electricity' && setting === 'zero') {
-  //       checkboxItem.style = 'display:flex'
-  //       datasetContainer.style = 'display:flex'
-  //     }
+      // ??? hardcode
+      if (category === 'Electricity' && setting === 'zero') {
+        checkboxItem.style = 'display:flex'
+        datasetContainer.style = 'display:flex'
+      }
 
-  //     // 多选框
-  //     const checkbox = document.createElement('input')
-  //     checkbox.type = 'checkbox'
-  //     checkbox.id = `${category}-${setting}/${name}`
-  //     checkbox.value = `${category}-${setting}/${name}`
-  //     checkbox.className = `checkbox-${category}-${setting}`
-  //     checkbox.addEventListener('change', handleChildCheckboxChange)
+      // 多选框
+      const checkbox = document.createElement('input')
+      checkbox.type = 'checkbox'
+      checkbox.id = `${category}-${setting}/${name}`
+      checkbox.value = `${category}-${setting}/${name}`
+      checkbox.className = `checkbox-${category}-${setting}`
+      checkbox.addEventListener('change', handleChildCheckboxChange)
 
-  //     // 标签
-  //     const label = document.createElement('label')
-  //     label.htmlFor = `${category}/${name}`
-  //     label.textContent = name
+      // 标签
+      const label = document.createElement('label')
+      label.htmlFor = checkbox.id
+      label.textContent = name
 
-  //     checkboxItem.appendChild(checkbox)
-  //     checkboxItem.appendChild(label)
-  //     datasetContainer.appendChild(checkboxItem)
-  //   })
+      checkboxItem.appendChild(checkbox)
+      checkboxItem.appendChild(label)
+      datasetContainer.appendChild(checkboxItem)
+    })
 
-  //   categoryDiv.appendChild(datasetContainer)
-  //   container.appendChild(categoryDiv)
-  // })
+    categoryDiv.appendChild(datasetContainer)
+    container.appendChild(categoryDiv)
+  })
 }
 
 // 子复选框改变事件

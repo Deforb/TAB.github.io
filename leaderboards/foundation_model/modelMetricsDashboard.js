@@ -82,7 +82,7 @@ function loadDataAndInitializeSettings(timeSeriesType) {
           phraseInputTable(results.data, timeSeriesType)
           toggleCategory('Metrics', timeSeriesType, true, false)
           toggleCategory('Type', timeSeriesType, true, false)
-          // toggleCategory('Horizons', setting, true, false)
+          toggleCategory('Strategy', timeSeriesType, true, false)
           // 设置评分选项
           toggleSelectAll(true, timeSeriesType)
           // display(setting)
@@ -146,23 +146,9 @@ function phraseInputTable(input, setting) {
   }, {})
 
   // 按数据集数量排序
-  const sortedCategories =
-    setting !== 'zero'
-      ? Object.keys(groupedDatasets).sort(
-          (a, b) => groupedDatasets[b].length - groupedDatasets[a].length
-        )
-      : [
-          'Traffic',
-          'Energy',
-          'Environment',
-          'Economic',
-          'Nature',
-          'Health',
-          'Stock',
-          'Banking',
-          'Web',
-          'Electricity',
-        ]
+  const sortedCategories = Object.keys(groupedDatasets).sort(
+    (a, b) => groupedDatasets[b].length - groupedDatasets[a].length
+  )
 
   // 数据集选择区域
   const container = document.getElementById(`dataset-container-${setting}`)
@@ -428,10 +414,12 @@ function processData(rowData, key, sort) {
  * @param {string} setting - The setting identifier used to select the related checkboxes.
  */
 function updateParentCheckbox(category, setting) {
-  if (category.includes('Type')) return
-
-  const checkboxes = document.querySelectorAll(`.checkbox-${category}-${setting}`)
   const selectAllCheckbox = document.getElementById(`select-all-${category}-${setting}`)
+
+  if (selectAllCheckbox === null) {
+    return
+  }
+  const checkboxes = document.querySelectorAll(`.checkbox-${category}-${setting}`)
 
   for (const checkbox of checkboxes) {
     if (!checkbox.checked) {
@@ -447,7 +435,7 @@ function submitSelection(setting) {
   const checkboxes = document.querySelectorAll(`*[class*="${setting}"]`)
   const selectTypes = []
   const selectMetrics = []
-  // const selectHorizons = []
+  const selectStrategies = []
   const selectDatasets = []
   let selectScore = null
 
@@ -461,8 +449,8 @@ function submitSelection(setting) {
         selectMetrics.push(idParts[1])
       } else if (checkbox.id.includes('Score')) {
         selectScore = idParts[1].split('-')[0]
-        // } else if (checkbox.id.includes('Horizons')) {
-        //   selectHorizons.push(idParts[1])
+      } else if (checkbox.id.includes('Strategy')) {
+        selectStrategies.push(idParts[1])
       } else {
         // dataset
         const dataset = `${checkbox.id.split('-')[0].replace('_', ' ')}/${idParts[1]}`
@@ -489,11 +477,13 @@ function submitSelection(setting) {
   // Aggregate methods based on selected types
   selectTypes.forEach(type => {
     MODEL_TYPE[type].forEach(item => {
-      selectedMethods = selectedMethods.concat([item + '(zero)', item + '(few)', item + '(full)'])
+      selectStrategies.forEach(strategy => {
+        selectedMethods = selectedMethods.concat([item + '(' + strategy + ')'])
+      })
     })
   })
 
-  // console.log(allData[setting])
+  // console.log('selectedMethods', selectedMethods)
   // Filter methods that exist in all_data
   selectedMethods = selectedMethods.filter(selectedMethod =>
     allData[setting].method.hasOwnProperty(selectedMethod)
@@ -541,7 +531,6 @@ function submitSelection(setting) {
     rowDatas.push({
       method,
       score: rank[method].score,
-      // score: rank[method].score.toFixed(2),
       rank1: rank[method].rank1,
       rank2: rank[method].rank2,
       rank3: rank[method].rank3,
@@ -581,14 +570,14 @@ function renderLeaderboard(rowDatas, setting) {
 
   rowDatas.forEach((rowData, index) => {
     const { method, score, rank1, rank2, rank3 } = rowData
+    const displayMethod = method.includes('(') ? method.replace('(', ' (') : method
     const methodData = allData[setting].method[method]
     const { parameters, paper_url, publication, bib, year } = methodData
-    // <td>${formatNumber(parameters)}</td>
 
     const row = document.createElement('tr')
     row.innerHTML = `
       <td>${index + 1}</td>
-      <td>${method}</td>
+      <td>${displayMethod}</td>
       <td>${score}</td>
       <td>${rank1}</td>
       <td>${rank2}</td>
@@ -599,7 +588,6 @@ function renderLeaderboard(rowDatas, setting) {
     `
     fragment.appendChild(row)
   })
-
   tbody.appendChild(fragment)
 }
 
@@ -614,7 +602,7 @@ function renderModelMetricsTable(rankCounts, year, tableId) {
   year.forEach(res => {
     key = res[0]
 
-    if (key != 'Dataset-Quantity-metrics') {
+    if (key !== 'Dataset-Quantity-metrics') {
       models.push(key)
       const th = document.createElement('th')
       // if (key == 'Non-stationary Transformer') {

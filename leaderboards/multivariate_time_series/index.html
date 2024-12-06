@@ -18,8 +18,8 @@
 <meta property="og:site_name" content="TAB - A Comprehensive and Fair Benchmark for Time Series Analytics">
 <meta property="og:description" content="Leaderboards   &#x2F;* 基本表格样式 *&#x2F;   table.my-table2 {     width: 100%;     border-collapse: collapse;     font-family: Arial, sans-serif;     border: none; &#x2F;* 去除表格边框 *&#x2F;     padding: 0;     margin: 0;   }">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2024-12-06T09:17:37.826Z">
-<meta property="article:modified_time" content="2024-12-06T09:17:37.826Z">
+<meta property="article:published_time" content="2024-12-06T12:27:57.375Z">
+<meta property="article:modified_time" content="2024-12-06T12:27:57.375Z">
 <meta property="article:author" content="DecisionIntelligence |">
 <meta name="twitter:card" content="summary">
   
@@ -229,7 +229,7 @@
     
     <div class="article-meta">
       <!--<a href="/TAB/leaderboards/multivariate_time_series/index.html" class="article-date">
-  <time datetime="2024-12-06T09:17:37.826Z" itemprop="datePublished">2024-12-06</time>
+  <time datetime="2024-12-06T12:27:57.375Z" itemprop="datePublished">2024-12-06</time>
 </a>-->
       <!-- 
 --><!-- by blair 160724 -->
@@ -692,21 +692,11 @@
 </div>
 
 <h3 id="Rules"><a href="#Rules" class="headerlink" title="Rules:"></a>Rules:</h3><ul>
-<li><p>For multivariate forecasting algorithms, we consider 25 datasets and 2 error metrics, i.e., MAE and MSE. For each dataset, we consider 4 forecasting horizons. This gives 200 (25 * 4 * 2) unique evaluation settings (<a href="../200seetings">click here</a> for details), <a href="./#Multivariate-forecasting-results">click here</a> to see the detailed results, <a href="./MTSF_RESULTS.csv">click here</a> to download detailed evaluation results for each of the 25 multivariate time series.</p>
+<li><p>For each anomaly detection algorithm, we count the number of times that the algorithm receives the gold, silver, and bronze medals, i.e., having the lowest, 2nd lowest, and 3rd lowest errors, shown as 🥇, 🥈, and 🥉, respectively.</p>
 </li>
-<li><p>For each forecasting algorithm, we count the number of times that the algorithm receives the gold, silver, and bronze medals, i.e., having the lowest, 2nd lowest, and 3rd lowest errors, shown as 🥇, 🥈, and 🥉, respectively.</p>
-</li>
-<li><p>We provide three different types of scores for ranking the forecasting algorithms. First, the scores equal to the numbers of gold medals. Second, the scores are the sum of the numbers of gold, silver, and bronze medals. Third, the scores are the weighted sum of the gold, silver, and bronze medals, where the weights can be customized. The larger the score, the higher the ranking.</p>
-</li>
-<li><p>Profile1 refers to a subset of ten datasets commonly used in recent literature, including Electricity, ETTm1, ETTm2, ETTh1, ETTh2, Traffic, Solar, Weather, ILI, and Exchange.</p>
+<li><p>We provide three different types of scores for ranking the anomaly detection algorithms. First, the scores equal to the numbers of gold medals. Second, the scores are the sum of the numbers of gold, silver, and bronze medals. Third, the scores are the weighted sum of the gold, silver, and bronze medals, where the weights can be customized. The larger the score, the higher the ranking.</p>
 </li>
 </ul>
-<div style="height:30px"></div>
-
-<!-- ### Multivariate forecasting results -->
-
-<div style="height:10px"></div>
-
 <style>
   .sticky-col {
     background-color: white;
@@ -760,17 +750,6 @@
     box-shadow: 2px 0 3px -2px rgba(0, 0, 0, 0.4); /* 右侧阴影 */
   }
 </style>
-
-<div class="main-container">
-  <div style="width:100%;overflow-y:auto;height:800px" class="table-container">
-    <table id="multivariateTable211" class="my-table2">
-      <thead>
-      </thead>
-      <tbody>
-      </tbody>
-    </table>
-  </div>
-</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 <script src='./modelMetricsDashboard.js'></script>
