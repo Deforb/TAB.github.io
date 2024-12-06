@@ -58,7 +58,7 @@ const forecastTaskType = Object.keys(allData)
  *   - Calls `toggleSelectAll` to set score options.
  */
 function loadDataAndInitializeSettings(timeSeriesType) {
-  fetch(`./${timeSeriesType}.csv`)
+  fetch(`./${timeSeriesType}.CSV`)
     .then(response => response.text())
     .then(text =>
       Papa.parse(text, {

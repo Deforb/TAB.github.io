@@ -59,7 +59,7 @@ const allData = {
  */
 function loadDataAndInitializeSettings(settings) {
   settings.forEach(setting => {
-    fetch(`./${setting}.csv`)
+    fetch(`./${setting}.CSV`)
       .then(response => response.text())
       .then(text =>
         Papa.parse(text, {
