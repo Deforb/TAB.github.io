@@ -142,25 +142,63 @@ function phraseInputTable(input, setting) {
     return acc
   }, {})
 
-  // 按数据集数量排序
-  const sortedCategories =
-    setting !== 'zero'
-      ? Object.keys(groupedDatasets).sort(
-          (a, b) => groupedDatasets[b].length - groupedDatasets[a].length
-        )
-      : [
-          'Traffic',
-          'Energy',
-          'Environment',
-          'Economic',
-          'Nature',
-          'Health',
-          'Stock',
-          'Banking',
-          'Web',
-          'Electricity',
-        ]
+  // 按照 domain 字符长度交替排序
+  // const datasetCategories = Object.keys(groupedDatasets)
+  // datasetCategories.sort((a, b) => a.length - b.length)
 
+  // const mid = Math.ceil(datasetCategories.length / 2)
+  // const part1 = datasetCategories.slice(0, mid)
+  // const part2 = datasetCategories.slice(mid)
+
+  // const sortedCategories = []
+  // let i = 0,
+  //   j = 0
+
+  // // 交替合并两个部分
+  // while (i < part1.length || j < part2.length) {
+  //   if (i < part1.length) {
+  //     sortedCategories.push(part1[i])
+  //     i++
+  //   }
+  //   if (j < part2.length) {
+  //     sortedCategories.push(part2[j])
+  //     j++
+  //   }
+  // }
+
+  // 按数据集数量排序
+  // const sortedCategories =
+  //   setting !== 'zero'
+  //     ? Object.keys(groupedDatasets).sort(
+  //         (a, b) => groupedDatasets[b].length - groupedDatasets[a].length
+  //       )
+  //     : [
+  //         'Traffic',
+  //         'Energy',
+  //         'Environment',
+  //         'Economic',
+  //         'Nature',
+  //         'Health',
+  //         'Stock',
+  //         'Banking',
+  //         'Web',
+  //         'Electricity',
+  //       ]
+
+  sortedCategories = [
+    'Web',
+    'Visitor_Flowrate',
+    'Machinery',
+    'Application_Server',
+    'Movement',
+    'Server_Machine',
+    'Synthetic',
+    'Space_Weather',
+    'Transport',
+    'Spacecraft',
+    'Finance',
+    'Water_Treatment',
+  ]
   // 数据集选择区域
   const container = document.getElementById(`dataset-container-${setting}`)
   sortedCategories.forEach(category => {

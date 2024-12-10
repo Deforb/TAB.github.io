@@ -146,9 +146,38 @@ function phraseInputTable(input, setting) {
   }, {})
 
   // 按数据集数量排序
-  const sortedCategories = Object.keys(groupedDatasets).sort(
-    (a, b) => groupedDatasets[b].length - groupedDatasets[a].length
-  )
+  // const sortedCategories = Object.keys(groupedDatasets).sort(
+  //   (a, b) => groupedDatasets[b].length - groupedDatasets[a].length
+  // )
+  let sortedCategories = []
+  if (setting === 'uni') {
+    sortedCategories = [
+      'Web',
+      'Server_Machine',
+      'AIOps',
+      'Mackey_Glass',
+      'Health',
+      'Spacecraft',
+      'Machinery',
+      'Movement',
+      'Multiple',
+    ]
+  } else {
+    sortedCategories = [
+      'Web',
+      'Visitor_Flowrate',
+      'Machinery',
+      'Application_Server',
+      'Movement',
+      'Server_Machine',
+      'Synthetic',
+      'Space_Weather',
+      'Transport',
+      'Spacecraft',
+      'Finance',
+      'Water_Treatment',
+    ]
+  }
 
   // 数据集选择区域
   const container = document.getElementById(`dataset-container-${setting}`)

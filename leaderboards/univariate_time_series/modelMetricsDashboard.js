@@ -157,9 +157,20 @@ function phraseInputTable(input, setting) {
   }, {})
 
   // 按数据集数量排序
-  const sortedCategories = Object.keys(groupedDatasets).sort(
-    (a, b) => groupedDatasets[b].length - groupedDatasets[a].length
-  )
+  // const sortedCategories = Object.keys(groupedDatasets).sort(
+  //   (a, b) => groupedDatasets[b].length - groupedDatasets[a].length
+  // )
+  sortedCategories = [
+    'Web',
+    'Server_Machine',
+    'AIOps',
+    'Mackey_Glass',
+    'Health',
+    'Spacecraft',
+    'Machinery',
+    'Movement',
+    'Multiple',
+  ]
 
   // 数据集选择区域
   const container = document.getElementById(`dataset-container-${setting}`)
